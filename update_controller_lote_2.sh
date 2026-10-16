@@ -2,17 +2,11 @@
 
 set -e
 
-echo "=== 1. Instalación de Nexxo LED Manager ==="
+echo "=== 1. Integracion Alias POPOYOS ==="
 curl -sSL https://raw.githubusercontent.com/jse-che/actualizacion-cortina/refs/heads/main/actualizar.sh | bash
 
 
 echo "=== 2. Instalación de Cloudflare ==="
-sudo mkdir -p --mode=0755 /usr/share/keyrings
-curl -fsSL https://pkg.cloudflare.com/cloudflare-main.gpg | sudo tee /usr/share/keyrings/cloudflare-main.gpg>/dev/null
-echo 'deb [signed-by=/usr/share/keyrings/cloudflare-main.gpg] https://pkg.cloudflare.com/cloudflared any main' | sudo tee /etc/apt/sources.list.d/cloudflared.list
-
-# Se ignora la comprobación de vigencia de firmas/fechas de los repositorios
-sudo apt-get update -o Acquire::Check-Valid-Until=false -o Acquire::Check-Date=false && sudo apt-get install -y cloudflared
 
 # --- Solicitud e Instalación de Cloudflare ---
 echo "=== Configuración e Instalación del Servicio de Cloudflare ==="
