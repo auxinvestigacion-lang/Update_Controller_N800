@@ -35,11 +35,11 @@ mkdir -p /home/cat/config/custom_components
 sudo rm -rf /home/cat/config/custom_components/nodered
 sudo rm -rf /home/cat/config/custom_components/webrtc
 
-docker restart homeassistant || true
-
 
 -- Versiones e Instalación Finalizadas ---"
 cloudflared --version
 docker exec homeassistant hass --version
 npm list -g zwave-js-ui
 cd ~
+
+docker restart homeassistant || true
