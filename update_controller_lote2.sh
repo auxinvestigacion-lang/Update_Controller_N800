@@ -28,7 +28,7 @@ else
 fi
 
 
-echo "=== 3. Limpieza de componentes antiguos e Instalación de Custom Components ==="
+echo "=== 3. Limpieza de componentes antiguos ==="
 mkdir -p /home/cat/config/custom_components
 
 # Borrado de carpetas específicas en custom_components
@@ -36,10 +36,11 @@ sudo rm -rf /home/cat/config/custom_components/nodered
 sudo rm -rf /home/cat/config/custom_components/webrtc
 
 
--- Versiones e Instalación Finalizadas ---"
+echo "--- Versiones e Instalación Finalizadas ---"
 cloudflared --version
 docker exec homeassistant hass --version
 npm list -g zwave-js-ui
 cd ~
 
+echo "=== 5. Reinicio de Home Assistant ==="
 docker restart homeassistant || true
