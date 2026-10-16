@@ -31,32 +31,20 @@ sudo rm -rf /home/cat/config/custom_components/webrtc
 
 echo "=== 4. Instalación de Integraciones (admin_network y plugin_service) ==="
 
-# Definición de rutas buscando coincidencia exacta en WSL
-BASE_DESKTOP="/mnt/c/Users/Rafa-Horus/Desktop"
-
-# Buscar carpeta Integraciones (con I mayúscula o minúscula)
-DIR_INTEGRACIONES=$(find "$BASE_DESKTOP" -maxdepth 1 -iname "Integraciones" -type d | head -n 1)
-
-if [ -z "$DIR_INTEGRACIONES" ]; then
-    echo "❌ Error: No se encontró la carpeta Integraciones en $BASE_DESKTOP"
-    exit 1
-fi
-
-RUTA_ORIGEN_1="$DIR_INTEGRACIONES/admin_network"
-RUTA_ORIGEN_2="$DIR_INTEGRACIONES/plugin_service"
+RUTA_ORIGEN_1="/tmp/admin_network"
+RUTA_ORIGEN_2="/tmp/plugin_service"
 RUTA_DESTINO="/home/cat/config/custom_components/"
 
-# Copia de plugin_service
+# Copia de plugin_service desde /tmp
 if [ -d "$RUTA_ORIGEN_2" ]; then
     echo "Copiando $RUTA_ORIGEN_2 a $RUTA_DESTINO..."
     sudo cp -r "$RUTA_ORIGEN_2" "$RUTA_DESTINO"
     sudo chown -R $USER:$USER "$RUTA_DESTINO"
-    echo "*Verification:* plugin_service copiado con éxito."
 else
-    echo "⚠️ Advertencia: No se encontró 'plugin_service' en $DIR_INTEGRACIONES. Continuando..."
+    echo "⚠️ Advertencia: No se encontró 'plugin_service' en /tmp/. Omitiendo..."
 fi
 
-# Instalación completa de admin_network (Host Service + Custom Component + Inyección Core Entry)
+# Instalación completa de admin_network desde /tmp
 if [ -d "$RUTA_ORIGEN_1" ]; then
     echo "Ejecutando instalación completa de admin_network..."
     if [ -f "$RUTA_ORIGEN_1/install_admin_network_all.sh" ]; then
@@ -68,7 +56,7 @@ if [ -d "$RUTA_ORIGEN_1" ]; then
         sudo chown -R $USER:$USER "$RUTA_DESTINO"
     fi
 else
-    echo "❌ Error: No se encontró 'admin_network' en $DIR_INTEGRACIONES"
+    echo "❌ Error: No se encontró 'admin_network' en /tmp/. Asegúrate de haber ejecutado el scp desde PowerShell."
     exit 1
 fi
 
