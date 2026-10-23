@@ -2,8 +2,7 @@
 
 set -e
 
-
-echo "=== 3. Configuración de configuration.yaml (Limpio para HA 2026.8+) ==="
+echo "=== 3. Configuration.yaml file (For HA 2026.8+) ==="
 cat << 'EOF'> /home/cat/config/configuration.yaml
 # Loads default set of integrations. Do not remove.
 default_config:
@@ -21,7 +20,7 @@ docker restart homeassistant || true
 
 
 
-echo "=== 4. Limpieza de componentes antiguos e Instalación de Custom Components ==="
+echo "=== 4. Cleaning of old components and installation of custom components ==="
 mkdir -p /home/cat/config/custom_components
 
 # Borrado de carpetas específicas en custom_components
@@ -29,7 +28,7 @@ sudo rm -rf /home/cat/config/custom_components/nodered
 sudo rm -rf /home/cat/config/custom_components/webrtc
 
 
-echo "=== 5. Limpieza y Liberación de Espacio ==="
+echo "=== 5. Cleaning and Decluttering Space ==="
 sudo apt-get clean
 sudo npm cache clean --force
 sudo rm -rf /root/.npm/_cacache /home/cat/*.zip /home/cat/config/config
@@ -39,20 +38,20 @@ df -h /
 
 
 
-echo "=== 6. Respaldo y Remoción de la Versión Antigua ==="
+echo "=== 6. Backup and Removal of the Old Version ==="
 # 1. Crear respaldo comprimido con fecha y hora actual
 BACKUP_NAME="ha_backup_$(date +%Y%m%d_%H%M%S).tar.gz"
-echo "Creando copia de seguridad comprimida en /home/cat/${BACKUP_NAME}..."
+echo "Creating a compressed backup in /home/cat/${BACKUP_NAME}..."
 tar -czf "/home/cat/${BACKUP_NAME}" -C /home/cat config
 
-echo "Copia de seguridad creada con éxito."
+echo "Backup created successfully."
 
 # 2. Detener y remover contenedor existente
 docker stop homeassistant || true
 docker rm homeassistant || true
 
 # 3. Eliminar la imagen previa de Home Assistant
-echo "Eliminando la imagen previa de Home Assistant..."
+echo "Removing the Home Assistant preview image..."
 docker rmi -f ghcr.io/home-assistant/home-assistant:stable || true
 
 # 4. Limpieza de imágenes huérfanas y caché de Docker
@@ -61,18 +60,15 @@ docker system prune -f
 docker builder prune -af
 df -h /
 
-echo "Sigue solo si hay ≥ 2 GB libres (en el anterior quedaron 4.2 GB)."
-read -p "Presiona Enter para continuar..." < /dev/tty
 
 
-
-echo "=== 7. Instalación integraciones Jose Charris ==="
+echo "=== 7. Installation of integrations Jose Charris ==="
 wget -qO- https://raw.githubusercontent.com/jse-che/nexxo-led-manager/main/install.sh | sh
 curl -sSL https://raw.githubusercontent.com/jse-che/actualizacion-cortina/refs/heads/main/actualizar.sh | bash
 
 
 
-echo "=== 8. Despliegue de la Versión Nueva ==="
+echo "=== 8. New Version of Home Assistant Rollout ==="
 cd /home/cat
 docker compose up -d --pull always
 docker ps
@@ -81,7 +77,7 @@ cd ~
 
 
 
-echo "=== 9. Actualización de Z-Wave UI ==="
+echo "=== 9. Z-Wave UI Update ==="
 sudo systemctl stop zwave-ui.service
 sudo npm install -g zwave-js-ui@latest
 sudo npm cache clean --force
@@ -91,14 +87,14 @@ sudo systemctl status zwave-ui.service
 
 
 
-echo "=== 10. Verificación Final y Reinicio de Home Assistant ==="
+echo "=== 10. Final Verification and Home Assistant Restart ==="
 docker restart homeassistant || true
 df -h /
 docker ps
 sudo systemctl is-active zwave-ui.service
 du -m /home/cat/config/home-assistant_v2.db || true
 
-echo "--- Versiones e Instalación Finalizadas ---"
+echo "--- Versions and Installation Completed ---"
 cloudflared --version
 docker exec homeassistant hass --version
 npm list -g zwave-js-ui
