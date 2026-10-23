@@ -62,7 +62,7 @@ docker builder prune -af
 df -h /
 
 echo "Sigue solo si hay ≥ 2 GB libres (en el anterior quedaron 4.2 GB)."
-read -p "Presiona Enter para continuar..."
+read -p "Presiona Enter para continuar..." < /dev/tty
 
 
 
