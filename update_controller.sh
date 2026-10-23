@@ -42,8 +42,22 @@ df -h /
 echo "=== 6. Remoción de la Versión Antigua ==="
 docker stop homeassistant || true
 docker rm homeassistant || true
+
+# Mostrar las imágenes disponibles para que el usuario elija
+echo "Imágenes de Docker disponibles:"
 docker images
-docker rmi -f f0baa7922ece || true
+
+# Pedir el ID de la imagen de forma interactiva
+read -p "Ingresa el ID de la imagen que deseas eliminar: " IMAGE_ID
+
+# Validar que el usuario no haya presionado Enter sin escribir nada
+if [ -n "$IMAGE_ID" ]; then
+    echo "Eliminando la imagen con ID: $IMAGE_ID..."
+    docker rmi -f "$IMAGE_ID" || true
+else
+    echo "No se ingresó ningún ID. Se omite la eliminación de la imagen."
+fi
+
 docker system prune -f
 docker builder prune -af
 df -h /
