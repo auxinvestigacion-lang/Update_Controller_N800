@@ -43,19 +43,19 @@ echo "=== 6. Remoción de la Versión Antigua ==="
 docker stop homeassistant || true
 docker rm homeassistant || true
 
-# Bucle infinito hasta que se elimine correctamente una imagen
+# Bucle interactivo asignado directamente a la terminal
 while true; do
     echo "Imágenes de Docker disponibles:"
     docker images
 
-    read -p "Ingresa el ID de la imagen que deseas eliminar: " IMAGE_ID
+    # </dev/tty fuerza a read a esperar la entrada física del teclado
+    read -p "Ingresa el ID de la imagen que deseas eliminar: " IMAGE_ID </dev/tty
 
-    # Si se ingresó un ID, intentar eliminarlo
     if [ -n "$IMAGE_ID" ]; then
         echo "Intentando eliminar la imagen con ID: $IMAGE_ID..."
         if docker rmi -f "$IMAGE_ID"; then
             echo "¡Imagen $IMAGE_ID eliminada exitosamente!"
-            break # Sale del bucle únicamente cuando la eliminación es exitosa
+            break
         else
             echo "Error: No se pudo eliminar la imagen '$IMAGE_ID'. Inténtalo de nuevo."
         fi
