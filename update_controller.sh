@@ -61,6 +61,21 @@ docker system prune -f
 docker builder prune -af
 df -h /
 
+# --- Confirmación manual al finalizar el Paso 6 ---
+echo ""
+echo "Sigue solo si hay ≥ 2 GB libres (en el anterior quedaron 4.2 GB)."
+
+read -p "Introduce 'y' para continuar o 'n' para finalizar: " RESPUESTA
+case "$RESPUESTA" in
+  [yY][eE][sS]|[yY])
+    echo "Continuando con la instalación..."
+    ;;
+  *)
+    echo "Operación cancelada. Deteniendo el programa..."
+    exit 1
+    ;;
+esac
+
 
 
 echo "=== 7. Instalación integraciones Jose Charris ==="
