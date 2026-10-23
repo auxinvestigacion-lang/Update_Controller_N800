@@ -39,17 +39,24 @@ df -h /
 
 
 
-echo "=== 6. Remoción de la Versión Antigua ==="
+echo "=== 6. Respaldo y Remoción de la Versión Antigua ==="
+# 1. Crear respaldo comprimido con fecha y hora actual
+BACKUP_NAME="ha_backup_$(date +%Y%m%d_%H%M%S).tar.gz"
+echo "Creando copia de seguridad comprimida en /home/cat/${BACKUP_NAME}..."
+tar -czf "/home/cat/${BACKUP_NAME}" -C /home/cat config
+
+echo "Copia de seguridad creada con éxito."
+
+# 2. Detener y remover contenedor existente
 docker stop homeassistant || true
 docker rm homeassistant || true
 
+# 3. Eliminar la imagen previa de Home Assistant
 echo "Eliminando la imagen previa de Home Assistant..."
-# Elimina específicamente la imagen de Home Assistant
 docker rmi -f ghcr.io/home-assistant/home-assistant:stable || true
 
-# Eliminar imágenes huérfanas/no etiquetadas
+# 4. Limpieza de imágenes huérfanas y caché de Docker
 docker image prune -af
-
 docker system prune -f
 docker builder prune -af
 df -h /
