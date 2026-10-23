@@ -43,27 +43,12 @@ echo "=== 6. Remoción de la Versión Antigua ==="
 docker stop homeassistant || true
 docker rm homeassistant || true
 
-# Bucle interactivo asignado directamente a la terminal
-while true; do
-    echo "Imágenes de Docker disponibles:"
-    docker images
+echo "Eliminando la imagen previa de Home Assistant..."
+# Elimina específicamente la imagen de Home Assistant
+docker rmi -f ghcr.io/home-assistant/home-assistant:stable || true
 
-    # </dev/tty fuerza a read a esperar la entrada física del teclado
-    read -p "Ingresa el ID de la imagen que deseas eliminar: " IMAGE_ID </dev/tty
-
-    if [ -n "$IMAGE_ID" ]; then
-        echo "Intentando eliminar la imagen con ID: $IMAGE_ID..."
-        if docker rmi -f "$IMAGE_ID"; then
-            echo "¡Imagen $IMAGE_ID eliminada exitosamente!"
-            break
-        else
-            echo "Error: No se pudo eliminar la imagen '$IMAGE_ID'. Inténtalo de nuevo."
-        fi
-    else
-        echo "Error: El ID no puede estar vacío."
-    fi
-    echo "--------------------------------------------------"
-done
+# Eliminar imágenes huérfanas/no etiquetadas
+docker image prune -af
 
 docker system prune -f
 docker builder prune -af
