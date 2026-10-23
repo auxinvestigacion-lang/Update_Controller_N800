@@ -61,18 +61,8 @@ docker system prune -f
 docker builder prune -af
 df -h /
 
-# --- Confirmación manual al finalizar el Paso 6 ---
-echo ""
-echo "Sigue solo si hay ≥ 2 GB libres."
-
-read -p "Introduce 'y' para continuar o 'n' para finalizar: (y/n)" RESPUESTA
-
-if [ "$RESPUESTA" = "y" ] || [ "$RESPUESTA" = "Y" ]; then
-    echo "Continuando con la instalación..."
-else
-    echo "Operación cancelada. Deteniendo el programa..."
-    exit 1
-fi
+echo "Sigue solo si hay ≥ 2 GB libres (en el anterior quedaron 4.2 GB)."
+read -p "Presiona Enter para continuar..."
 
 
 
