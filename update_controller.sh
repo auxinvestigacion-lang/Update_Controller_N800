@@ -52,7 +52,8 @@ docker rm homeassistant || true
 
 # 3. Eliminar la imagen previa de Home Assistant
 echo "Removing the Home Assistant preview image..."
-docker rmi -f ghcr.io/home-assistant/home-assistant:stable || true
+docker images
+sudo docker image prune -a || true
 
 # 4. Limpieza de imágenes huérfanas y caché de Docker
 docker image prune -af
@@ -68,13 +69,19 @@ curl -sSL https://raw.githubusercontent.com/jse-che/actualizacion-cortina/refs/h
 
 
 
-echo "=== 8. New Version of Home Assistant Rollout ==="
-cd /home/cat
-docker compose up -d --pull always
-docker ps
-docker exec homeassistant hass --version
-cd ~
-
+echo "=== 8. Dowload Version of Home Assistant 2026.9.3 ==="
+sudo docker pull ghcr.io/home-assistant/home-assistant:2026.9.3
+sudo docker run -d \
+  --name homeassistant \
+  --privileged \
+  --restart unless-stopped \
+  -e TZ=America/Bogota \
+  -v /home/cat/config:/config \
+  -v /home/cat/media:/media \
+  -v /etc/localtime:/etc/localtime:ro \
+  -v /run/dbus:/run/dbus:ro \
+  --network host \
+  ghcr.io/home-assistant/home-assistant:2026.9.3
 
 
 echo "=== 9. Z-Wave UI Update ==="
