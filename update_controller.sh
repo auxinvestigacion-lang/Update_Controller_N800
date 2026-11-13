@@ -54,7 +54,7 @@ docker rm homeassistant || true
 # 3. Eliminar la imagen previa de Home Assistant
 echo "Removing the Home Assistant preview image..."
 docker images
-sudo docker image prune -a
+sudo docker image prune -af
 
 # 4. Limpieza de imágenes huérfanas y caché de Docker
 docker image prune -af
